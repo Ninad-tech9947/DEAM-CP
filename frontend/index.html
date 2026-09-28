@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pune Power Brain</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div>
+      <span class="eyebrow">Digital electronics project · Pune</span>
+      <h1>Pune Power Brain</h1>
+      <p>Every glowing node is a real part of Pune's grid. A model predicts each one's demand 30 minutes ahead, every second, and a digital circuit switches off places before an overload. Hospitals, water, fire, police, telecom and transport always stay on.</p>
+    </div>
+    <div class="clockbox">
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="clock-sub" id="clockSub">Pune time (IST)</div>
+      <button class="btn small" id="themeBtn" type="button">Dark mode</button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="City summary"></section>
+
+  <div class="main">
+    <section class="panel brain-panel" aria-label="3D power brain">
+      <div class="panel-head">
+        <h2>Power brain</h2>
+        <span>Drag to turn it. Tap a node to see it</span>
+      </div>
+      <div class="legend">
+        <span><i class="lg cool"></i>Steady</span>
+        <span><i class="lg warm"></i>Rising</span>
+        <span><i class="lg hot"></i>Surge in 30 min</span>
+        <span><i class="lg lock"></i>Essential, locked ON</span>
+        <span><i class="lg shed"></i>Switched off</span>
+      </div>
+      <div class="brain" id="brain">
+        <div class="tooltip" id="tooltip" hidden></div>
+      </div>
+      <p class="note">Bright nodes: grid in-feed, 4 substations, 29 areas and 82 places. Faint mesh: shape only.</p>
+    </section>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>Controls</h2>
+        <label class="supply" for="supply">
+          <span class="row">Electricity available <output id="supplyOut">1,900 MW</output></span>
+          <input type="range" id="supply" min="400" max="2600" step="50" value="1900">
+        </label>
+        <label class="switch" for="fault"><input type="checkbox" id="fault"><span>Grid fault<small id="faultNote">Lose 400 MW</small></span></label>
+      </section>
+      <section class="panel" id="detail" aria-live="polite"></section>
+      <section class="panel">
+        <div class="panel-head"><h2>Surge alerts</h2><span>Next 30 min</span></div>
+        <ul class="alerts" id="alerts"></ul>
+      </section>
+    </aside>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>The circuit, this second</h2><span>It acts on the demand predicted for 30 minutes from now</span></div>
+    <div class="circuit">
+      <div class="block">
+        <h3>1. Clock</h3>
+        <div class="big" id="cClock">--:--:--</div>
+        <p class="what">Real time from your device, in Pune time. Runs the model and circuit once every second.</p>
+      </div>
+      <div class="block">
+        <h3>2. Comparator</h3>
+        <div class="cmp" id="cmp"></div>
+        <div class="leds" id="cmpLeds"></div>
+      </div>
+      <div class="block">
+        <h3>3. Up/down counter</h3>
+        <div class="leds" id="levelLeds"></div>
+        <p class="what">L = how many places are off. OVER counts up, SPARE counts down.</p>
+      </div>
+      <div class="block">
+        <h3>4. Decoder and lock</h3>
+        <p class="rule">Place #k ON = (k ≥ L)</p>
+        <p class="rule">Essential ON = 1 OR anything = 1</p>
+        <p class="what" id="cWhat"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="two">
+    <section class="panel">
+      <div class="panel-head"><h2>Find a place</h2><span id="listCount"></span></div>
+      <div class="tabs" id="tabs" role="group" aria-label="Filter places">
+        <button type="button" data-f="off" aria-pressed="true">Switched off</button>
+        <button type="button" data-f="surge" aria-pressed="false">Surging</button>
+        <button type="button" data-f="lock" aria-pressed="false">Essential</button>
+        <button type="button" data-f="all" aria-pressed="false">All</button>
+      </div>
+      <input type="search" id="search" placeholder="Search a place or area, for example Kothrud or hospital" aria-label="Search places">
+      <ul class="places" id="places"></ul>
+    </section>
+    <section class="panel">
+      <h2>Where the data comes from</h2>
+      <ul class="facts" id="facts"></ul>
+    </section>
+  </div>
+</div>
+<script src="vendor/three.min.js"></script>
+<script src="brain3d.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
